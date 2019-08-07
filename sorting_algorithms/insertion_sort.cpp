@@ -1,3 +1,4 @@
+//time complexity of insertion sort is O(n^2)
 #include<iostream>
 #include<time.h>
 using namespace std;
