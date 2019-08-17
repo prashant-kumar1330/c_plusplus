@@ -11,7 +11,23 @@ node(int data){
 }
 
 };
- node* insertdata(node* root,int data){
+node* head=NULL;
+ void insert_at_tail(int data){
+      if(head==NULL){
+        head=new node(data);
+
+        return;
+      }
+     node* temp=head;
+      while(temp->right!=NULL){
+        temp=temp->right;
+      }
+      node* it=new node(data);
+
+      temp->right=it;
+
+    }
+     node* insertdata(node* root,int data){
      if(root==NULL){
          return new node(data);
      }
@@ -43,28 +59,16 @@ while(data!=-1){
 }
 return root;
  }
- node* insertatTail(int data){
-    node* head=NULL;
-    node* it;
-    node* temp;
-    if(head==NULL){
-        head=new node(data);
-        it=head;
-        temp=head;
-    }
-    node* p=new node(data);
-    temp->right=p;
-    return it;
-}
 
 node* bst_to_linklist(node* root){
     if(root==NULL){
         return NULL;
     }
     bst_to_linklist(root->left);
-     node* head=insertatTail(root->data);
+    //this is inorder traversal
+    insert_at_tail(root->data);
     bst_to_linklist(root->right);
-    return head;
+
 }
 
 void printList(node* head){
@@ -76,6 +80,6 @@ void printList(node* head){
 }
 int main(){
     node* root=bst();
-    node* head=bst_to_linklist(root);
+    bst_to_linklist(root);
     printList(head);
 }
