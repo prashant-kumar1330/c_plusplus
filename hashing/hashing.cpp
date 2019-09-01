@@ -4,7 +4,7 @@
 using namespace std;
 
 int main(){
- Hashtable<int> h(11);
+ Hashtable<int> h(5);
  h.insert("mango",100);
  h.insert("apple",120);
   h.insert("banana",130);
@@ -17,7 +17,7 @@ int main(){
          h.display();
         cout<<endl;
         string fruit;
-        cout<<"enter fruit name to know its price ";
+        cout<<"enter fruit name ";
         cin>>fruit;
         int* price=h.Search(fruit);
         if(price==NULL){
@@ -26,11 +26,13 @@ int main(){
         else{
             cout<<"price is => "<<*price<<endl;
         }
-        cout<<"enter fruit name you want to delete ";
+         cout<<"enter fruit name which you want to delete ";
         cin>>fruit;
         h.deleteNode(fruit);
          cout<<endl;
        h.display();
+
+
 
 
 }

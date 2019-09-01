@@ -15,6 +15,12 @@ public:
       this->key = k;
       this->value = v;
    }
+   ~node(){
+     if(next!=NULL){
+        delete next;
+     }
+
+   }
 };
 template <typename T>
 class Hashtable
@@ -22,6 +28,38 @@ class Hashtable
    int currentSize;
    int tableSize;
    node<T> **buckets; //stores the refrence of array which stores the address
+   void rehash(){
+    node<T>** oldBuckets=buckets;
+    int oldTableSize=tableSize;
+    tableSize=2*tableSize;
+    currentSize=0;
+    buckets=new node<T>*[tableSize];
+     for (int i = 0; i < tableSize; i++)
+      {
+         buckets[i] = NULL;
+      }
+    for(int i=0;i<oldTableSize;i++){
+        node<T>* temp=oldBuckets[i];
+
+        if(temp!=NULL){
+            while(temp!=NULL){
+                insert(temp->key,temp->value);
+                temp=temp->next;
+
+            }
+            delete oldBuckets[i];
+
+
+
+        }
+
+
+    }
+ delete [] oldBuckets;//delete the arrays
+
+return;
+
+   }
 public:
    Hashtable(int defaultSize = 7)
    {
@@ -57,6 +95,11 @@ public:
       temp->next = buckets[index];
       buckets[index] = temp;
       currentSize++;
+      float loadFactor=(float)currentSize/tableSize;
+      if(loadFactor>0.7){
+            cout<<"load factor is "<<loadFactor<<endl;
+        rehash();
+      }
       return;
    }
    T* Search(string k){
@@ -79,6 +122,7 @@ public:
    if(temp->key==k){
     buckets[i]=temp->next;
     delete temp;
+    currentSize--;
     return;
    }
    node<T>*it=temp;
@@ -87,6 +131,7 @@ public:
        if(temp->key==k){
         it->next=temp->next;
         delete temp;
+        currentSize--;
         return;
        }
     it=temp;
@@ -98,6 +143,8 @@ public:
 
    void display()
    {
+
+
       for (int i = 0; i < tableSize; i++)
       {
          node<T> *temp = buckets[i];
