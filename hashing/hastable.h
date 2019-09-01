@@ -56,19 +56,43 @@ public:
       node<T> *temp = new node<T>(k, val);
       temp->next = buckets[index];
       buckets[index] = temp;
+      currentSize++;
       return;
    }
-   int Search(string k){
+   T* Search(string k){
     int index=this->hashFunction(k);
     node<T>* temp=buckets[index];
     while(temp!=NULL){
         if(temp->key==k){
-            return temp->value;
+            return &(temp->value);
         }
         temp=temp->next;
 
 
    }
+   return NULL;
+
+   }
+   void deleteNode(string k){
+    int i= this->hashFunction(k);
+   node<T>* temp=buckets[i];
+   if(temp->key==k){
+    buckets[i]=temp->next;
+    delete temp;
+    return;
+   }
+   node<T>*it=temp;
+   temp=temp->next;
+   while(temp!=NULL){
+       if(temp->key==k){
+        it->next=temp->next;
+        delete temp;
+        return;
+       }
+    it=temp;
+    temp=temp->next;
+   }
+   cout<<"entered data is not found";
 
    }
 

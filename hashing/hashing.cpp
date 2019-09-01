@@ -1,4 +1,5 @@
 #include<iostream>
+#include<cstring>
 #include"hastable.h"
 using namespace std;
 
@@ -15,9 +16,21 @@ int main(){
         h.insert("avacado",200);
          h.display();
         cout<<endl;
-       cout<<"price of pears =>"<< h.Search("pears");
-
-
+        string fruit;
+        cout<<"enter fruit name to know its price ";
+        cin>>fruit;
+        int* price=h.Search(fruit);
+        if(price==NULL){
+            cout<<"not found";
+        }
+        else{
+            cout<<"price is => "<<*price<<endl;
+        }
+        cout<<"enter fruit name you want to delete ";
+        cin>>fruit;
+        h.deleteNode(fruit);
+         cout<<endl;
+       h.display();
 
 
 }
