@@ -14,7 +14,7 @@ void addEdge(T u,T v,bool biDirectional=true){
      addnode[u].push_back(v);
      if(biDirectional){
             addnode[v].push_back(u);
-  
+
      }
 
 }
@@ -36,7 +36,7 @@ void addEdge(T u,T v,bool biDirectional=true){
         if(!visited[x]){
             dfsHelper(x,visited);
         }
-       
+
     }
 
  }
@@ -55,31 +55,33 @@ void addEdge(T u,T v,bool biDirectional=true){
    }
    cout<<"this graph had "<<component<<" components";
  }
- void topoSortHelper(T vertex,map<T,bool>& visited,list<T>& topo){
+ bool cycleDetection(T vertex){
+     map<T,bool> visited ;
+     map<T,T> parent;
+     queue<T> q;
+     q.push(vertex);
      visited[vertex]=true;
-     
-     for(auto x: addnode[vertex]){
-       
-         if(!visited[x]){
-             topoSortHelper(x,visited,topo);
-         }
+     parent[vertex]=vertex;
+     while(!q.empty()){
+       T node=q.front();
+       q.pop();
+       for(auto neighbour: addnode[node]){
+           if(visited[neighbour]&& parent[neighbour]!=node){
+               return true;
+           }
+           else if(!visited[neighbour]){
+               visited[neighbour]=true;
+               parent[neighbour]= node;
+               q.push(neighbour);
+           }
+       }
      }
-     topo.push_front(vertex);
+     return false;
  }
- //for topological sort graph must be DAG (directed acyclic graph)
- void topologicalSort_dfs(T vertex){
-   map<T,bool> visited;
-   list<T> topo;
-   topoSortHelper(vertex,visited,topo);
-  for(auto x:topo){
-      cout<<x<<",";
-  }
 
- }
 };
 int main(){
-graph<int>g;
-
+graph<int> g;
 g.addEdge(0,1);
 g.addEdge(0,4);
 g.addEdge(1,2);
@@ -88,5 +90,28 @@ g.addEdge(2,3);
 g.addEdge(4,3);
 g.addEdge(3,5);
 
-g.topologicalSort_dfs(0);
+g.dfs(0);
+cout<<endl;
+graph<string> p;
+p.addEdge("prashant","amit",1);
+p.addEdge("aditya","shweta",1);
+p.addEdge("prashant","anjali",1);
+p.addEdge("jyoti","sumit",1);
+p.addEdge("himanshu","prashant",1);
+
+p.addEdge("himanshu","sumit",1);
+p.addEdge("afsar","anjali",0);
+p.addEdge("priyanka","aditya",0);
+p.addEdge("mamta","shubham",1);
+//g.print();
+p.dfs("prashant");
+cout<<endl;
+if(p.cycleDetection("prashant")){
+    cout<<"cycle is present";
+}
+else{
+    cout<<"cycle is not present";
+}
+
+
 }
