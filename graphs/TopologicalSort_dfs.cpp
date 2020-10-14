@@ -1,92 +1,62 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include<map>
+#include<unordered_map>
+#include<cstring>
+#include<list>
 using namespace std;
-
 template <typename T>
-class graph{
- map<T,list<T>> addnode;
+class Graph{
+    int V;
+    unordered_map<T, list<T> > adjList;
 public:
-graph(){
-
-
-}
-
-void addEdge(T u,T v,bool biDirectional=true){
-     addnode[u].push_back(v);
-     if(biDirectional){
-            addnode[v].push_back(u);
-  
-     }
-
-}
-    void print(){
-     for(auto x: addnode)
-      {
-          cout<<x.first<<"->";
-          for(auto i: x.second){
-              cout<<i<<",";
-          }
-          cout<<endl;
-      }
-
+    Graph(int v){
+        V = v;
     }
- void dfsHelper(T vertex,map<T,bool>& visited){
-    visited[vertex]=true;
-    cout<<vertex<<" ,";
-    for(auto x: addnode[vertex]){
-        if(!visited[x]){
-            dfsHelper(x,visited);
+    void addEdge(T u, T v) {
+        adjList[u].push_back(v);
+    }
+    
+    // TODO: Check if graph is directed and acyclic or not.
+
+    void dfsUtil(T src, unordered_map<T, bool> &visited, list<T> &topoSort){
+        visited[src] = true;
+
+        for(auto neighbour: adjList[src]){
+            if(not visited[neighbour])
+                dfsUtil(neighbour, visited, topoSort);
         }
-       
+        topoSort.push_front(src);
+        return;
+
     }
+    void dfs(){
+        unordered_map<T, bool> visited;
+        list<T> topoSort;
+        for(auto node: adjList){
+            T key = node.first;
+            visited[key] = false;
+        }
 
- }
-
- void dfs(T vertex){
-   map<T,bool> visited;
-   int component=1;
-   dfsHelper(vertex,visited);
-   cout<<endl;
-   for(auto i:addnode){
-       T node= i.first;
-       if(!visited[node]){
-           dfsHelper(node,visited);
-           component++;
-       }
-   }
-   cout<<"this graph had "<<component<<" components";
- }
- void topoSortHelper(T vertex,map<T,bool>& visited,list<T>& topo){
-     visited[vertex]=true;
-     
-     for(auto x: addnode[vertex]){
-       
-         if(!visited[x]){
-             topoSortHelper(x,visited,topo);
-         }
-     }
-     topo.push_front(vertex);
- }
- //for topological sort graph must be DAG (directed acyclic graph)
- void topologicalSort_dfs(T vertex){
-   map<T,bool> visited;
-   list<T> topo;
-   topoSortHelper(vertex,visited,topo);
-  for(auto x:topo){
-      cout<<x<<",";
-  }
-
- }
+        for(auto node: adjList){
+            T key = node.first;
+            if(not visited[key]){
+                dfsUtil(key, visited, topoSort);
+            }
+            
+        }
+        //cout<<"Number of components : "<<count;
+        for(auto element: topoSort){
+            cout<<element<<" ";
+        }
+    }
 };
-int main(){
-graph<int>g;
+int main() {
+    Graph<string> g(5);
+    g.addEdge("Jaipur","Rewari");
+    g.addEdge("Jammu","Delhi");
+    g.addEdge("Agra", "Jaipur");
+    g.addEdge("Delhi", "Agra");
+    g.addEdge("Delhi","Rewari");
+    g.dfs();
 
-g.addEdge(0,1);
-g.addEdge(0,4);
-g.addEdge(1,2);
-g.addEdge(2,4);
-g.addEdge(2,3);
-g.addEdge(4,3);
-g.addEdge(3,5);
-
-g.topologicalSort_dfs(0);
 }
