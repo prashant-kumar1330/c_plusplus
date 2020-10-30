@@ -45,9 +45,9 @@ int height(node* root){
     if(!root){
         return 0;
     }
-    int x= height(root->left);
-    int y= height(root->right);
-    return max(x,y)+1;
+    int left_height= height(root->left);
+    int right_height= height(root->right);
+    return max(left_height,right_height)+1;
 }
 void printPreorder(node* root){
     //base case
@@ -56,6 +56,16 @@ void printPreorder(node* root){
     }
     cout<<root->data<<" ";//print the root 
     printPreorder(root->left);//then its left node
+    printPreorder(root->right);//then its right node
+}
+void printInorder(node* root){
+    //base case
+    if(root==NULL){
+        return;
+    }
+    
+    printPreorder(root->left);//then its left node
+    cout<<root->data<<" ";//print the root 
     printPreorder(root->right);//then its right node
 }
 int main(){
